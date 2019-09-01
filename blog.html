@@ -1,0 +1,107 @@
+<html>
+<head>
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+	
+	<link rel="stylesheet" href="style.css">
+	<script type="text/javascript" src="string.js"></script>
+	<script type="text/javascript" src="components_system.js"></script>
+	<script type="text/javascript" src="contents_parser.js"></script>
+	<script type="text/javascript" src="server_communication.js"></script>
+
+	<script type="text/javascript" src="components.js"></script>
+	<script type="text/javascript" src="blog/enumerate_blog_posts.php"></script>
+	<script type="text/javascript" src="blog-functions.js"></script>
+
+	<script type="text/javascript">
+		let BlogPostOrder = GetOrderedPostLUT(files, 10, BlogPostSortFunction);
+		let CurrentOrderedBlogPost = BlogPostOrder.length - 1;
+
+		function GetNextPost ()
+		{
+			if (CurrentOrderedBlogPost < BlogPostOrder.length)
+			{
+				CurrentOrderedBlogPost++;
+				LoadBlogPost(CurrentOrderedBlogPost);
+			}
+		}
+
+		function GetPrevPost ()
+		{
+			if (CurrentOrderedBlogPost > 0)
+			{
+				CurrentOrderedBlogPost--;
+				LoadBlogPost(CurrentOrderedBlogPost);
+			}
+		}
+
+		function GetBlogPostFromServer (OrderedIndex)
+		{
+			let PostFilename = files[BlogPostOrder[OrderedIndex].index];
+			GetFileFromServer("blog\\" + PostFilename, function() 
+			{
+				if (this.readyState == 4 && this.status == 200)
+				{
+					let BlogPostContents = ParseContents(this.responseText);
+					RenderNav();
+					RenderBlogPage(
+						BlogPostContents.Title, 
+						BlogPostContents.Sections,
+						CurrentOrderedBlogPost,
+						files.length,
+						GetNextPost,
+						GetPrevPost);
+				}
+			});
+		}
+		
+		function FindBlogPostWithoutExtension (PostName)
+		{
+			let Result = -1;
+			for (let i = 0; i < files.length; i++)
+			{
+				if (files[i].substring(0, files[i].length - 4) === PostName)
+				{
+					Result = i;
+					break;
+				}
+			}
+			return Result;
+		}
+
+		function LoadBlogPost (OrderedIndex)
+		{
+			let Filename = files[BlogPostOrder[OrderedIndex].index];
+			let PostName = GetNoExtensionBlogPostName(Filename);
+			SetURLToBlogPost(PostName);			
+		}
+
+		let URLSpecifiedPost = window.location.href.indexOf("post=");
+		if (URLSpecifiedPost == -1)
+		{
+			let Filename = files[BlogPostOrder[CurrentOrderedBlogPost].index];
+			let MostRecentPostName = GetNoExtensionBlogPostName(Filename);
+			SetURLToBlogPost(MostRecentPostName);
+		}
+		else
+		{
+			let CurrentUnorderedBlogPost = FindBlogPostWithoutExtension(window.location.href.substring(URLSpecifiedPost + 5));
+			
+			for (let i = 0; i < BlogPostOrder.length; i++)
+			{
+				if (BlogPostOrder[i].index == CurrentUnorderedBlogPost)
+				{
+					CurrentOrderedBlogPost = i;
+					break;
+				}
+			}
+
+			GetBlogPostFromServer(CurrentOrderedBlogPost);
+		}
+	</script>
+</head>
+
+<body>
+</body>
+</html>

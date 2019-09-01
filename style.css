@@ -1,0 +1,176 @@
+@import url('https://fonts.googleapis.com/css?family=PT+Serif:400,700|Work+Sans:300,400,600,900&display=swap');
+
+body
+{
+	display: grid;
+	grid-template-columns: auto 300px 600px auto;
+	grid-template-areas: ". nav page .";
+
+	padding-top: 32px;
+	padding-bottom: 64px;
+	background-color: black;
+	color: #CCCCCCFF;
+		
+	font-family: 'Work Sans';
+	line-height: 24px;
+}
+
+.title
+{
+	font-weight: 600;
+	font-size: 32px;
+	line-height: 38px;
+}
+
+.subtitle
+{
+	font-weight: 600;
+	font-size: 24px;
+	margin-top: 16px;
+	margin-bottom: 16px;
+}
+
+.button
+{
+	font-size: 18px;
+	text-decoration: none;
+	display: block;
+	color: inherit;
+}
+
+.button:hover
+{
+	text-decoration: underline;
+	cursor: pointer;
+	color: inherit;
+}
+
+.button:visited
+{
+	text-decoration: none;
+	color: inherit;
+}
+
+.nav
+{
+	grid-area: nav;
+}
+
+.nav hr
+{
+	margin-top: 16px;
+	margin-right: 32px;
+	margin-bottom: 16px;
+}
+
+.nav .button
+{
+	margin-bottom: 16px;
+}
+
+.page
+{
+	grid-area: page;
+}
+
+.blog_nav
+{
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-areas: "prev index next";
+	margin-bottom: 16px;
+}
+
+.blog_nav #prev
+{
+	grid-area: prev;
+	text-align: left;
+}
+
+.blog_nav #index
+{
+	grid-area: index;
+	text-align: center;
+}
+
+.blog_nav #next
+{
+	grid-area: next;
+	text-align: right;
+}
+
+.full_bar_image
+{
+	width: 100%;
+	margin-top: 48px;
+	margin-bottom: 32px;
+}
+
+.circle_image
+{
+	border-radius: 50%;
+	background-size: auto 100%;
+	background-position: 50%;
+}
+
+.video_player
+{
+	width: 100%;
+}
+
+.contents#sketchbook
+{
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	column-gap: 16px;
+	row-gap: 16px;
+}
+
+.sketch
+{
+	text-decoration: none;
+	color:inherit;
+	text-align: center;
+}
+
+.sketch:hover
+{
+	text-decoration: underline;
+	cursor: pointer;
+	color: inherit;
+}
+
+.sketch:visited
+{
+	text-decoration: none;
+	color:inherit;
+}
+
+.sketch .circle_image
+{
+	width: 180px;
+	height: 180px;
+}
+
+.contents b
+{
+	font-weight: 600;
+}
+
+.contents a
+{
+	color: #6FC190;
+	text-decoration: none;
+}
+
+.contents a:visited
+{
+	color: #6FC190;
+	text-decoration: none;
+}
+
+.contents a:hover
+{
+	color: #DA5D59;
+	text-decoration: underline;
+}

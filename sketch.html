@@ -1,0 +1,47 @@
+<html>
+<head>
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+
+	<link rel="stylesheet" href="style.css">
+	<script type="text/javascript" src="string.js"></script>
+	<script type="text/javascript" src="components_system.js"></script>
+	<script type="text/javascript" src="contents_parser.js"></script>
+	<script type="text/javascript" src="server_communication.js"></script>
+
+	<script type="text/javascript" src="components.js"></script>
+	<script type="text/javascript" src="blog-functions.js"></script>
+
+	<script type="text/javascript">
+
+		function GetSketchPostFromServer (SketchName)
+		{
+			GetFileFromServer("sketchbook\\" + SketchName, function() 
+			{
+				if (this.readyState == 4 && this.status == 200)
+				{
+					let BlogPostContents = ParseContents(this.responseText);
+					RenderNav();
+					RenderPage(BlogPostContents.Title, BlogPostContents.Sections);
+				}
+			});
+		}
+		
+		let URLSpecifiedPost = window.location.href.indexOf("post=");
+		if (URLSpecifiedPost == -1)
+		{
+			// TODO(Peter): This is an error state since these aren't sequential
+		}
+		else
+		{
+			let PostName = window.location.href.substring(URLSpecifiedPost + 5);
+			let PostFile = PostName + ".txt";
+			GetSketchPostFromServer(PostFile);
+		}
+	</script>
+</head>
+
+<body>
+</body>
+</html>

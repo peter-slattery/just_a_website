@@ -1,0 +1,41 @@
+<html>
+<head>
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+	
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+	<link rel="stylesheet" href="style.css">
+	<script type="text/javascript" src="string.js"></script>
+	<script type="text/javascript" src="components_system.js"></script>
+	<script type="text/javascript" src="contents_parser.js"></script>
+	<script type="text/javascript" src="server_communication.js"></script>
+
+	<script type="text/javascript" src="components.js"></script>
+	<script type="text/javascript" src="blog/enumerate_blog_posts.php"></script>
+	<script type="text/javascript" src="blog-functions.js"></script>
+
+	<script type="text/javascript">
+		let BlogPostOrder = GetOrderedPostLUT(files);
+		
+		RenderNav();
+		
+		let IndexPage = CreatePage("Blog Posts", "");
+		let PostListing = CreateEmptyElement("div", "listing");
+		for (let i = 0; i < BlogPostOrder.length; i++)
+		{
+			let UnorderedIndex = BlogPostOrder[i].index;
+			let Filename = files[UnorderedIndex];
+			let Postname = GetNoExtensionBlogPostName(Filename);
+			let PostTitle = GetPostTitleFromName(Postname);
+			AppendChildLink(PostListing, "button", "blog.html?post=" + Postname, PostTitle);
+		}
+		AppendExistingChild(IndexPage, PostListing);
+		AppendExistingChild(document.body, IndexPage);
+
+	</script>
+</body>
+</html>

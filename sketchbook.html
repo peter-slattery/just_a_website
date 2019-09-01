@@ -1,0 +1,65 @@
+<html>
+<head>
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+	
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+	<script type="text/javascript" src="string.js"></script>
+	<script type="text/javascript" src="components_system.js"></script>
+	<script type="text/javascript" src="contents_parser.js"></script>
+	<script type="text/javascript" src="server_communication.js"></script>
+
+	<script type="text/javascript" src="components.js"></script>
+	<script type="text/javascript" src="sketchbook/enumerate_sketchbook_posts.php"></script>
+	<script type="text/javascript" src="blog-functions.js"></script>
+
+	<script type="text/javascript">
+		let OrderedSketchFiles = GetOrderedPostLUT(files, 4, SketchSortFunction);
+		let Sketches = [];
+		let SketchesLoaded = 0;
+
+		for (let i = 0; i < OrderedSketchFiles.length; i++)
+		{
+			let SketchFile = files[OrderedSketchFiles[i].index];
+			GetFileFromServer(".\\sketchbook\\" + SketchFile, function()
+			{
+				if (this.readyState == 4 && this.status == 200)
+				{
+					let NewSketch = ParseContents(this.responseText);
+					NewSketch.FileIndex = OrderedSketchFiles[i].index;
+					Sketches[i] = NewSketch;
+					SketchesLoaded++;
+
+					if (SketchesLoaded == files.length)
+					{
+						RenderNav();
+		
+						let SketchbookPage = CreatePageJustTitle("Sketchbook");
+						let Contents = CreateEmptyElement("div", "contents");
+						Contents.id = "sketchbook";
+
+						for(let j = 0; j < Sketches.length; j++)
+						{
+							console.log(j);
+							let SketchFile = files[Sketches[j].FileIndex];
+							let SketchBtn = CreateEmptyElement("a", "sketch");
+							SketchBtn.href="sketch.html?post="+GetNoExtensionBlogPostName(SketchFile);
+							AppendExistingChild(SketchBtn, CreateCircleImage(Sketches[j].Sections[0].Image));
+							AppendChild(SketchBtn, "div", "subtitle", Sketches[j].Title);
+							AppendExistingChild(Contents, SketchBtn);
+						}
+		
+						AppendExistingChild(SketchbookPage, Contents);
+						AppendExistingChild(document.body, SketchbookPage);
+					}
+				}
+			});
+		}
+
+	</script>
+</body>
+</html>

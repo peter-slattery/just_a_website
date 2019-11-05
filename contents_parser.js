@@ -36,7 +36,7 @@ function PutBreaksAtNewLines (String)
 	{
 		if (IsNewline(Result[i]))
 		{
-			Result = InsertStringInString(Result, "<br />", i + 1);
+			Result = InsertStringInString(Result, "<br /><br />", i + 1);
 		}
 	}
 	return Result;
@@ -47,6 +47,7 @@ const SectionIdentifier = "section_title:";
 const BodyIdentifier = "section_body:";
 const ImageIdentifier = "image:";
 const VideoIdentifier = "video:";
+const VideoURLIdentifier = "video_link:"
 
 function SafeGetTokenValueLengths (Contents, Start, Token)
 {
@@ -78,6 +79,7 @@ function ParseContents (ContentsFile)
 		
 		if (TokensEqual(ContentsFile, i, TitleIdentifier))
 		{
+			console.log("Parsing Title");
 			i += TitleIdentifier.length;
 			let TitleStart = i;
 			while (ContentsFile[i] != ';') { i++; }
@@ -86,6 +88,7 @@ function ParseContents (ContentsFile)
 		}
 		else if(TokensEqual(ContentsFile, i, SectionIdentifier))
 		{
+			console.log("Parsing Section");
 			ValueRange = SafeGetTokenValueLengths(ContentsFile, i, SectionIdentifier);
 			let SectionTitle = ContentsFile.substring(ValueRange.Start, ValueRange.End);
 			SectionTitle = PutBreaksAtNewLines(SectionTitle);
@@ -93,6 +96,7 @@ function ParseContents (ContentsFile)
 		}
 		else if (TokensEqual(ContentsFile, i, BodyIdentifier))
 		{
+			console.log("Parsing Body");
 			ValueRange = SafeGetTokenValueLengths(ContentsFile, i, BodyIdentifier);
 
 			if (Result.Sections.length == 0)
@@ -106,17 +110,26 @@ function ParseContents (ContentsFile)
 		}
 		else if (TokensEqual(ContentsFile, i, ImageIdentifier))
 		{
+			console.log("Parsing Image");
 			ValueRange = SafeGetTokenValueLengths(ContentsFile, i, ImageIdentifier);
 			let ImagePath = ContentsFile.substring(ValueRange.Start, ValueRange.End);
 			Result.Sections.push({Image: ImagePath});
 		}
 		else if (TokensEqual(ContentsFile, i, VideoIdentifier))
 		{
+			console.log("Parsing Video");
 			ValueRange = SafeGetTokenValueLengths(ContentsFile, i, VideoIdentifier);
 			let VideoPath = ContentsFile.substring(ValueRange.Start, ValueRange.End);
 			Result.Sections.push({Video: VideoPath});
 		}
-		
+		else if (TokensEqual(ContentsFile, i, VideoURLIdentifier))
+		{
+			console.log("Parsing Link");
+			ValueRange = SafeGetTokenValueLengths(ContentsFile, i, VideoURLIdentifier);
+			let VideoPath = ContentsFile.substring(ValueRange.Start, ValueRange.End);
+			Result.Sections.push({VideoLink: VideoPath});
+		}
+
 		if (ValueRange.End >= 0)
 		{
 			i = ValueRange.End;

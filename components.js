@@ -20,6 +20,19 @@ function CreateVideo (File)
 	return Video;
 }
 
+function CreateVideoLink (URL)
+{
+	let Video = CreateEmptyElement("iframe", "youtube");
+	Video.width = 560;
+	Video.height = 315;
+	Video.frameborder = 0;
+	Video.allow = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture";
+	Video.allowfullscreen = true;
+	Video.src = URL;
+	Video.controls = true;
+	return Video;
+}
+
 function CreateContentsSection (Sections)
 {
 	let Contents = CreateEmptyElement("div", "contents");
@@ -28,19 +41,28 @@ function CreateContentsSection (Sections)
 		let Section = Sections[i];
 		if (Section.Title != undefined && Section.Title != null && Section.Title != "")
 		{
+			console.log("Gen Title");
 			AppendChild(Contents, "div", "subtitle", Section.Title);
 		}
 		if (Section.Body != undefined && Section.Body != null && Section.Body != "")
 		{
+			console.log("Gen Body");
 			AppendChild(Contents, "div", "text", Section.Body);
 		}
 		if (Section.Image != undefined && Section.Image != null && Section.Image != "")
 		{
+			console.log("Gen Image");
 			AppendExistingChild(Contents, CreateImage(Section.Image));
 		}
 		if (Section.Video != undefined && Section.Video != null && Section.Video != "")
 		{
+			console.log("Gen Video");
 			AppendExistingChild(Contents, CreateVideo(Section.Video));
+		}
+		if (Section.VideoLink != undefined && Section.VideoLink != null && Section.VideoLink != "")
+		{
+			console.log("Gen Link");
+			AppendExistingChild(Contents, CreateVideoLink(Section.VideoLink));
 		}
 		
 	}
@@ -70,10 +92,10 @@ function RenderNav ()
 	
 	AppendChild(Nav, "hr", "", "");
 
-	let AboutBtn = AppendChildLink(Nav, "button", "\\index.html", "About | Work");
-	let SketchbookBtn = AppendChildLink(Nav, "button", "\\sketchbook.html", "Sketchbook");
+	let AboutBtn = AppendChildLink(Nav, "button", "\\", "About");
+	let SketchbookBtn = AppendChildLink(Nav, "button", "\\work.html", "Work");
 	let BlogBtn = AppendChildLink(Nav, "button", "\\blog.html", "Blog");
-
+	let Source = AppendChildLink(Nav, "button", "https://github.com/peter-slattery/just_a_website", "Source");
 	document.body.appendChild(Nav);
 }
 
